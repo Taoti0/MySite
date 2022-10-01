@@ -60,6 +60,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (!form.getPasswordOld().isEmpty()) {
             if (user.getPassword().equals(form.getPasswordOld())) {
                 user.setPassword(form.getPasswordNow());
+                user.setUpdatedTime(LocalDateTime.now());
                 if (1 != userMapper.updateById(user))
                     throw new BaseException(SystemErrorType.UPDATE_ERROR);
                 return id;
@@ -72,6 +73,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         user.setAge(form.getAge());
         user.setSex(form.getSex());
         user.setNickname(form.getNickname());
+        user.setUpdatedTime(LocalDateTime.now());
         if(1 != userMapper.updateById(user))
             throw new BaseException(SystemErrorType.UPDATE_ERROR);
         return id;
