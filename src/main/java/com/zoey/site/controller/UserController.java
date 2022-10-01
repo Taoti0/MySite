@@ -2,6 +2,7 @@ package com.zoey.site.controller;
 
 import com.zoey.site.entity.form.LoginForm;
 import com.zoey.site.entity.form.RegisterForm;
+import com.zoey.site.entity.form.UpdateUserForm;
 import com.zoey.site.service.UserService;
 import com.zoey.site.utils.Result;
 import io.swagger.annotations.Api;
@@ -35,6 +36,13 @@ public class UserController {
     @ApiOperation(value = "注册用户", notes = "注册用户")
     public Result<Long> register(@RequestBody RegisterForm form){
         Long id = userService.register(form);
+        return Result.success(id);
+    }
+
+    @PostMapping("/update")
+    @ApiOperation(value = "修改用户", notes = "修改用户")
+    public Result<Long> update(@RequestBody UpdateUserForm form){
+        Long id = userService.update(form);
         return Result.success(id);
     }
 }

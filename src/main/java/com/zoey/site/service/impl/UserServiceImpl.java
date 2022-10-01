@@ -3,6 +3,7 @@ package com.zoey.site.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zoey.site.entity.form.RegisterForm;
+import com.zoey.site.entity.form.UpdateUserForm;
 import com.zoey.site.entity.po.User;
 import com.zoey.site.exception.BaseException;
 import com.zoey.site.exception.SystemErrorType;
@@ -10,6 +11,7 @@ import com.zoey.site.mapper.UserMapper;
 import com.zoey.site.service.UserService;
 import com.zoey.site.utils.Snowflake;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
@@ -29,9 +31,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public Long login(String username, String password) {
         User user = userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getUsername, username));
         if(null == user)
-            throw new BaseException(SystemErrorType.LOGIN_ERROR_NONE);
+            throw new BaseException(SystemErrorType.USER_NOT_EXIST);
         if(!password.equals(user.getPassword()))
-            throw new BaseException(SystemErrorType.LOGIN_ERROR);
+            throw new BaseException(SystemErrorType.LOGIN_ERROR_PASSWORD);
         return user.getId();
     }
 
@@ -46,5 +48,32 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             return id;
         else
             throw new BaseException(SystemErrorType.REGISTER_ERROR);
+    }
+
+    @Override
+    public Long update(UpdateUserForm form) {
+        Long id = form.getId();
+        User user = userMapper.selectById(id);
+        if(null == user)
+            throw new BaseException(SystemErrorType.USER_NOT_EXIST);
+        // 仅修改密码的情况：密码不为空且与数据库中的密码相同
+        if (!form.getPasswordOld().isEmpty()) {
+            if (user.getPassword().equals(form.getPasswordOld())) {
+                user.setPassword(form.getPasswordNow());
+                if (1 != userMapper.updateById(user))
+                    throw new BaseException(SystemErrorType.UPDATE_ERROR);
+                return id;
+            } else
+                throw new BaseException(SystemErrorType.UPDATE_ERROR_PASSWORD);
+        }
+
+        // 修改用户其他信息的情况
+        user.setUsername(form.getUsername());
+        user.setAge(form.getAge());
+        user.setSex(form.getSex());
+        user.setNickname(form.getNickname());
+        if(1 != userMapper.updateById(user))
+            throw new BaseException(SystemErrorType.UPDATE_ERROR);
+        return id;
     }
 }
