@@ -43,8 +43,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public boolean register(User user) {
         if(null != userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getUsername, user.getUsername())))
             throw new BaseException(SystemErrorType.REGISTER_ERROR_EXIST);
-        user.setCreatedTime(LocalDateTime.now());
-        user.setUpdatedTime(LocalDateTime.now());
         if (1 == userMapper.insert(user))
             return true;
         else

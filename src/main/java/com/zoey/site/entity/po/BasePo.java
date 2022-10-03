@@ -17,7 +17,7 @@ public class BasePo implements Serializable  {
     @TableId(type = IdType.ASSIGN_ID)
     private Long id;
     @TableField(fill = FieldFill.INSERT)
-    private LocalDateTime createdTime;
+    private LocalDateTime createdTime = LocalDateTime.now();
     @TableField(fill = FieldFill.INSERT_UPDATE)
-    private LocalDateTime updatedTime;
+    private LocalDateTime updatedTime = LocalDateTime.now();
 }
