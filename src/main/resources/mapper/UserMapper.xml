@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zoey.site.mapper.UserMapper">
+    <update id="updateInfo">
+        UPDATE `user` SET `updated_time` = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s')
+        <if test="param.username != null and param.username != ''">, `username` = #{param.username}</if>
+        <if test="param.nickname != null and param.nickname != ''">, `nickname` = #{param.nickname}</if>
+        <if test="param.sex != null">, `sex` = #{param.sex}</if>
+        <if test="param.age != null">, `age` = #{param.age}</if>
+        WHERE id = #{param.id}
+    </update>
+
+    <update id="updatePSW">
+        UPDATE `user` SET `updated_time` = DATE_FORMAT(NOW(),'%Y-%m-%d %H:%m:%s'), `password` = #{param.passwordNow}
+        WHERE id = #{param.id} AND `password` = #{param.passwordOld}
+    </update>
+</mapper>

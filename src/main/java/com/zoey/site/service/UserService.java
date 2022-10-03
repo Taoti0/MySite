@@ -8,7 +8,7 @@ import com.zoey.site.entity.po.User;
 public interface UserService extends IService<User> {
     Long login(String username, String password);
 
-    Long register(RegisterForm form);
+    boolean register(User user);
 
-    Long update(UpdateUserForm form);
+    boolean update(UpdateUserForm form);
 }

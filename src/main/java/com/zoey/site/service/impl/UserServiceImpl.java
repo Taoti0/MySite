@@ -1,7 +1,9 @@
 package com.zoey.site.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import com.zoey.site.entity.form.RegisterForm;
 import com.zoey.site.entity.form.UpdateUserForm;
 import com.zoey.site.entity.po.User;
@@ -38,44 +40,32 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    public Long register(RegisterForm form) {
-        if(null != userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getUsername, form.getUsername())))
+    public boolean register(User user) {
+        if(null != userMapper.selectOne(new LambdaQueryWrapper<User>().eq(User::getUsername, user.getUsername())))
             throw new BaseException(SystemErrorType.REGISTER_ERROR_EXIST);
-        Long id = new Snowflake().nextId();
-        User user = new User(id, form.getUsername(), form.getPassword(), form.getSex(),
-                form.getAge(), form.getNickname(), LocalDateTime.now(), LocalDateTime.now());
+        user.setCreatedTime(LocalDateTime.now());
+        user.setUpdatedTime(LocalDateTime.now());
         if (1 == userMapper.insert(user))
-            return id;
+            return true;
         else
             throw new BaseException(SystemErrorType.REGISTER_ERROR);
     }
 
     @Override
-    public Long update(UpdateUserForm form) {
+    public boolean update(UpdateUserForm form) {
         Long id = form.getId();
-        User user = userMapper.selectById(id);
-        if(null == user)
+        if(null == userMapper.selectById(id))
             throw new BaseException(SystemErrorType.USER_NOT_EXIST);
-        // 仅修改密码的情况：密码不为空且与数据库中的密码相同
-        if (!form.getPasswordOld().isEmpty()) {
-            if (user.getPassword().equals(form.getPasswordOld())) {
-                user.setPassword(form.getPasswordNow());
-                user.setUpdatedTime(LocalDateTime.now());
-                if (1 != userMapper.updateById(user))
-                    throw new BaseException(SystemErrorType.UPDATE_ERROR);
-                return id;
-            } else
+        // 修改用户其他信息
+        if(form.getPasswordOld().isEmpty()){
+            if(1 != userMapper.updateInfo(form))
+                throw new BaseException(SystemErrorType.UPDATE_ERROR);
+        }
+        // 仅修改用户密码
+        else{
+            if (userMapper.updatePSW(form) != 1)
                 throw new BaseException(SystemErrorType.UPDATE_ERROR_PASSWORD);
         }
-
-        // 修改用户其他信息的情况
-        user.setUsername(form.getUsername());
-        user.setAge(form.getAge());
-        user.setSex(form.getSex());
-        user.setNickname(form.getNickname());
-        user.setUpdatedTime(LocalDateTime.now());
-        if(1 != userMapper.updateById(user))
-            throw new BaseException(SystemErrorType.UPDATE_ERROR);
-        return id;
+        return true;
     }
 }

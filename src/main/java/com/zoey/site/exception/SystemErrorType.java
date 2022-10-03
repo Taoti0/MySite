@@ -14,8 +14,8 @@ public enum  SystemErrorType implements ErrorType {
     SYSTEM_ERROR_UNKNOWN("500001", "未知错误"),
     USER_NOT_EXIST("500002", "用户不存在"),
     // 后续补充
-    LOGIN_ERROR("100000", "密码错误"),
-    LOGIN_ERROR_PASSWORD("100001", "用户不存在"),
+    LOGIN_ERROR("100000", "登陆失败"),
+    LOGIN_ERROR_PASSWORD("100001", "密码错误"),
 
     REGISTER_ERROR("100010", "当前用户已存在"),
     REGISTER_ERROR_EXIST("100011", "当前用户已存在"),

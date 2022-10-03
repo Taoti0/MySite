@@ -1,5 +1,6 @@
 package com.zoey.site.entity.form;
 
+import com.zoey.site.entity.po.User;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiParam;
 import lombok.Data;
@@ -12,7 +13,7 @@ import lombok.Data;
  */
 @Data
 @ApiModel(description = "注册表单")
-public class RegisterForm {
+public class RegisterForm extends BaseForm<User> {
     @ApiParam(name = "用户名", required = true)
     private String username;
     @ApiParam(name = "密码", required = true)

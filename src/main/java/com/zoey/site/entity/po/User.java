@@ -21,13 +21,9 @@ import java.time.LocalDateTime;
 @Data
 @TableName("user")
 @ApiModel(value = "用户信息", description = "用户表")
-@AllArgsConstructor
-@NoArgsConstructor
-public class User implements Serializable {
+public class User extends BasePo implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    @TableId("id")
-    private Long id;
     @TableField("username")
     private String username;
     @TableField("password")
@@ -40,20 +36,4 @@ public class User implements Serializable {
     private String nickname;
     @TableLogic("deleted")
     private Byte deleted;
-    @TableField("createdTime")
-    private LocalDateTime createdTime;
-    @TableField("updatedTime")
-    private LocalDateTime updatedTime;
-
-    public User(Long id, String username, String password, Byte sex, Integer age,
-                String nickname, LocalDateTime createdTime, LocalDateTime updatedTime) {
-        this.id = id;
-        this.username = username;
-        this.password = password;
-        this.sex = sex;
-        this.age = age;
-        this.nickname = nickname;
-        this.createdTime = createdTime;
-        this.updatedTime = updatedTime;
-    }
 }
