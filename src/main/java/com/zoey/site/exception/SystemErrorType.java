@@ -22,6 +22,8 @@ public enum  SystemErrorType implements ErrorType {
 
     UPDATE_ERROR("100100", "更新失败"),
     UPDATE_ERROR_PASSWORD("100101", "原密码错误"),
+
+    Article_NOT_EXIST("600001", "文章不存在"),
     ;
 
     private String code;

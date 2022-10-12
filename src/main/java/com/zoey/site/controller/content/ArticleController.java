@@ -3,6 +3,7 @@ package com.zoey.site.controller.content;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.zoey.site.entity.form.content.ArticleForm;
+import com.zoey.site.entity.form.content.ArticleUpdateForm;
 import com.zoey.site.entity.po.content.Article;
 import com.zoey.site.service.content.ArticleService;
 import com.zoey.site.utils.Result;
@@ -17,7 +18,7 @@ import java.util.List;
  * @ClassName ArticleController
  * @author: Zoey He
  * @data: 2022-10-02 13:21
- * @Description TODO
+ * @Description 内容 - 文章管理
  */
 @RestController("/content/article")
 @Api(tags = "内容 - 文章管理")
@@ -49,5 +50,11 @@ public class ArticleController {
     @ApiOperation(value = "获取指定文章", notes = "获取指定文章")
     public Result<Article> get(Long id){
         return Result.success(articleService.getById(id));
+    }
+
+    @PostMapping("/updateArticle")
+    @ApiOperation(value = "修改文章", notes = "修改文章")
+    public Result<Boolean> update(@RequestBody ArticleUpdateForm form) {
+        return Result.success(articleService.update(form));
     }
 }

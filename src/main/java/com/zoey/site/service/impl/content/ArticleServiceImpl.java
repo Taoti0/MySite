@@ -4,7 +4,10 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zoey.site.entity.form.content.ArticleForm;
+import com.zoey.site.entity.form.content.ArticleUpdateForm;
 import com.zoey.site.entity.po.content.Article;
+import com.zoey.site.exception.BaseException;
+import com.zoey.site.exception.SystemErrorType;
 import com.zoey.site.mapper.UserMapper;
 import com.zoey.site.mapper.content.ArticleMapper;
 import com.zoey.site.service.content.ArticleService;
@@ -41,5 +44,13 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     @Override
     public List<Article> getList(String userId) {
         return articleMapper.selectList(new LambdaQueryWrapper<Article>().eq(Article::getUserId, userId).orderByDesc(Article::getUpdatedTime));
+    }
+
+    @Override
+    public boolean update(ArticleUpdateForm form) {
+        Long id = form.getId();
+        if (null == articleMapper.selectById(id))
+            throw new BaseException(SystemErrorType.Article_NOT_EXIST);
+        return  1 == articleMapper.updateArticle(form);
     }
 }
