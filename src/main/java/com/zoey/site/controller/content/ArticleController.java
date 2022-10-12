@@ -57,4 +57,10 @@ public class ArticleController {
     public Result<Boolean> update(@RequestBody ArticleUpdateForm form) {
         return Result.success(articleService.update(form));
     }
+
+    @DeleteMapping("/removeArticle")
+    @ApiOperation(value = "删除指定文章", notes = "删除指定文章")
+    public Result<Boolean> remove(Long id) {
+        return Result.success(articleService.removeById(id));
+    }
 }
