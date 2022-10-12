@@ -15,4 +15,6 @@ public interface ArticleService extends IService<Article> {
     List<Article> getList(String userId);
 
     boolean update(ArticleUpdateForm form);
+
+    Article get(Long id);
 }

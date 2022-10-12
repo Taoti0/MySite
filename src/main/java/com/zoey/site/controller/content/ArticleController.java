@@ -49,7 +49,7 @@ public class ArticleController {
     @GetMapping("/get")
     @ApiOperation(value = "获取指定文章", notes = "获取指定文章")
     public Result<Article> get(Long id){
-        return Result.success(articleService.getById(id));
+        return Result.success(articleService.get(id));
     }
 
     @PostMapping("/updateArticle")

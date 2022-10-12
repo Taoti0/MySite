@@ -38,12 +38,18 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
     @Override
     public Page<Article> selectPage(Page<Article> page, String userId) {
-        return articleMapper.selectPage(page, new LambdaQueryWrapper<Article>().eq(Article::getUserId, userId).orderByDesc(Article::getUpdatedTime));
+        return articleMapper.selectPage(page, new LambdaQueryWrapper<Article>()
+                .eq(Article::getUserId, userId)
+                .eq(Article::getDeleted, 0)
+                .orderByDesc(Article::getUpdatedTime));
     }
 
     @Override
     public List<Article> getList(String userId) {
-        return articleMapper.selectList(new LambdaQueryWrapper<Article>().eq(Article::getUserId, userId).orderByDesc(Article::getUpdatedTime));
+        return articleMapper.selectList(new LambdaQueryWrapper<Article>()
+                .eq(Article::getUserId, userId)
+                .eq(Article::getDeleted, 0)
+                .orderByDesc(Article::getUpdatedTime));
     }
 
     @Override
@@ -52,5 +58,13 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         if (null == articleMapper.selectById(id))
             throw new BaseException(SystemErrorType.Article_NOT_EXIST);
         return  1 == articleMapper.updateArticle(form);
+    }
+
+    @Override
+    public Article get(Long id) {
+        Article article = articleMapper.selectById(id);
+        if (1 == article.getDeleted())
+            throw new BaseException(SystemErrorType.Article_NOT_EXIST);
+        return article;
     }
 }
