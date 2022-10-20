@@ -33,6 +33,8 @@ public class Article extends BasePo implements Serializable {
     private int category;
     @TableField("label")
     private String label;
+    @TableField("views")
+    private int views;
     @TableLogic("deleted")
     private Byte deleted;
 }

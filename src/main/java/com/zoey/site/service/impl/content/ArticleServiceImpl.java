@@ -3,7 +3,6 @@ package com.zoey.site.service.impl.content;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.zoey.site.entity.form.content.ArticleForm;
 import com.zoey.site.entity.form.content.ArticleUpdateForm;
 import com.zoey.site.entity.po.content.Article;
 import com.zoey.site.exception.BaseException;
@@ -65,6 +64,10 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         Article article = articleMapper.selectById(id);
         if (1 == article.getDeleted())
             throw new BaseException(SystemErrorType.Article_NOT_EXIST);
+        // 当天该文章的浏览量 + 1
+        /* 这种频繁访问数据库的方式不是很好，鉴于可能没多少人会浏览网页，暂时先这么写，以后可等累计到一定数量，单独写接口存储 */
+        article.setViews(article.getViews() + 1);
+        articleMapper.updateById(article);
         return article;
     }
 }
