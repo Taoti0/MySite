@@ -31,3 +31,6 @@ CREATE TABLE IF NOT EXISTS `content_article` (
     `updated_time` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
 	PRIMARY KEY ( `id` )
 ) ENGINE = INNODB DEFAULT CHARSET = utf8;
+
+-- update content_article add column 'views'
+ALTER TABLE `content_article` ADD `views` INT(11) DEFAULT 0 COMMENT '访问量' AFTER `label`
